@@ -11,10 +11,15 @@ class Specialite(models.Model):
 
 class Filiere(models.Model):
     nom = models.CharField(max_length=100)
+    code = models.CharField(max_length=10, unique=True)
     specialite = models.ForeignKey(Specialite, on_delete=models.CASCADE, related_name='filieres')
 
     def __str__(self):
         return f"{self.nom}-({self.specialite.nom})"
+
+
+class AnneeScolaire(models.Model):
+    annee_scolaire = models.CharField(max_length=9)  # e.g., "2023-2024"
 
 
 class Etudiant(models.Model):
@@ -23,6 +28,8 @@ class Etudiant(models.Model):
     filiere = models.ForeignKey(Filiere, on_delete=models.CASCADE, related_name='etudiants')
     niveau = models.PositiveIntegerField()  # niveau d'étude (1,2,3,...)
     a_vote = models.BooleanField(default=False)
+    annee_candidature = models.ForeignKey(AnneeScolaire, on_delete=models.CASCADE, related_name='etudiants')
+    
     
     def __str__(self):
         return f"{self.nom} ({self.matricule})"
@@ -31,7 +38,7 @@ class Etudiant(models.Model):
 class Candidat(models.Model):
     etudiant = models.OneToOneField(Etudiant, on_delete=models.CASCADE, primary_key=True)
     slogan = models.CharField(max_length=100)
-    couleur = models.CharField(max_length=7)  # couleur en hexadecimal
+    annee_candidature = models.ForeignKey(AnneeScolaire, on_delete=models.CASCADE, related_name='candidats')
     
     def __str__(self):
         return f"Candidat: {self.etudiant.nom} ({self.etudiant.matricule})"
