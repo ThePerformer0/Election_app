@@ -10,6 +10,4 @@ __pycache__/
 *.pyc
 *.log
 *.pot
-
-# Fichiers statiques
-/frontend/static/
+*.po

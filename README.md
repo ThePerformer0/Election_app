@@ -18,7 +18,7 @@ Une application web pour gérer les élections étudiantes.
 1. Clonez le dépôt :
 
     ```sh
-    git clone https://github.com/votre-utilisateur/election_app.git
+    git clone https://github.com/ThePerformer0/Election_app.git
     cd election_app
     ```
 
@@ -49,14 +49,14 @@ Une application web pour gérer les élections étudiantes.
 
 ## Structure du projet
 
-- [backend](http://_vscodecontentref_/0) : Contient le code source du backend Django.
-  - [backend](http://_vscodecontentref_/1) : Configuration principale du projet Django.
-  - [core/](http://_vscodecontentref_/2) : Application principale avec les modèles et vues de base.
-  - `students/` : Application pour gérer les étudiants.
-  - `votes/` : Application pour gérer les votes.
-- [frontend](http://_vscodecontentref_/3) : Contient les fichiers statiques (HTML, CSS, JavaScript).
-- [requirements.txt](http://_vscodecontentref_/4) : Liste des dépendances Python.
-- [README.md](http://_vscodecontentref_/5) : Documentation du projet.
+- backend : Contient le code source du backend Django.
+  - backend : Configuration principale du projet Django.
+  - core : Application principale avec les modèles et vues de base.
+  - students : Application pour gérer les étudiants.
+  - vote : Application pour gérer les votes.
+- frontend : Contient les fichiers statiques (HTML, CSS, JavaScript).
+- [requirements.txt](http://_vscodecontentref_/0) : Liste des dépendances Python.
+- [README.md](http://_vscodecontentref_/1) : Documentation du projet.
 
 ## Fonctionnalités
 
