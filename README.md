@@ -42,7 +42,13 @@ Une application web pour gérer les élections étudiantes.
     python manage.py migrate
     ```
 
-5. Démarrez le serveur de développement :
+5. Ajoutez des images pour les candidats :
+
+    - Créez un dossier `media/candidats_photos/` dans le répertoire racine du projet.
+    - Ajoutez les images des candidats dans ce dossier. Les images doivent être nommées de manière à correspondre aux candidats dans la base de données.
+
+
+6. Démarrez le serveur de développement :
 
     ```sh
     python manage.py runserver
