@@ -39,6 +39,7 @@ class Candidat(models.Model):
     etudiant = models.OneToOneField(Etudiant, on_delete=models.CASCADE, primary_key=True)
     slogan = models.CharField(max_length=100)
     annee_candidature = models.ForeignKey(AnneeScolaire, on_delete=models.CASCADE, related_name='candidats')
+    photo = models.ImageField(upload_to='candidats_photos/', null=True, blank=True)  # Ajout du champ photo
     
     def __str__(self):
         return f"Candidat: {self.etudiant.nom} ({self.etudiant.matricule})"
