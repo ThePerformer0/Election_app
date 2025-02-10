@@ -28,7 +28,7 @@ class Etudiant(models.Model):
     filiere = models.ForeignKey(Filiere, on_delete=models.CASCADE, related_name='etudiants')
     niveau = models.PositiveIntegerField()  # niveau d'étude (1,2,3,...)
     a_vote = models.BooleanField(default=False)
-    annee_candidature = models.ForeignKey(AnneeScolaire, on_delete=models.CASCADE, related_name='etudiants')
+    annee_scolaire = models.ForeignKey(AnneeScolaire, on_delete=models.CASCADE, related_name='etudiants')
     
     
     def __str__(self):

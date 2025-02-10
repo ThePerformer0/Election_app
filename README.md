@@ -20,6 +20,7 @@ Une application web pour gérer les élections étudiantes.
     ```sh
     git clone https://github.com/ThePerformer0/Election_app.git
     cd election_app
+    cd election_project
     ```
 
 2. Créez et activez un environnement virtuel :
@@ -38,25 +39,16 @@ Une application web pour gérer les élections étudiantes.
 4. Appliquez les migrations de la base de données :
 
     ```sh
-    python backend/manage.py migrate
+    python manage.py migrate
     ```
 
 5. Démarrez le serveur de développement :
 
     ```sh
-    python backend/manage.py runserver
+    python manage.py runserver
     ```
 
 ## Structure du projet
-
-- backend : Contient le code source du backend Django.
-  - backend : Configuration principale du projet Django.
-  - core : Application principale avec les modèles et vues de base.
-  - students : Application pour gérer les étudiants.
-  - vote : Application pour gérer les votes.
-- frontend : Contient les fichiers statiques (HTML, CSS, JavaScript).
-- [requirements.txt](http://_vscodecontentref_/0) : Liste des dépendances Python.
-- [README.md](http://_vscodecontentref_/1) : Documentation du projet.
 
 ## Fonctionnalités
 

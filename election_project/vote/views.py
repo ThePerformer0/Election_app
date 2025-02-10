@@ -4,19 +4,34 @@ from django.contrib.admin.views.decorators import staff_member_required
 from .models import *
 from .forms import LoginForm
 
-# Create your views here.
+from django.contrib.auth import authenticate, login
+
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm()
+        form = LoginForm(request.POST)
         if form.is_valid():
-            matricule = form.cleaned_data['matricule']
-            nom = form.cleaned_data['nom']
-            try:
-                etudiant = Etudiant.objects.get(matricule=matricule, nom=nom)    
-                request.session['etudiant_id'] = etudiant.id
-                return redirect('vote:vote')
-            except Etudiant.DoesNotExist:
-                messages.error(request, "Identifiants incorrects")
+            is_student = form.cleaned_data.get('is_student')
+            if is_student:
+                matricule = form.cleaned_data['matricule']
+                nom = form.cleaned_data['nom']
+                try:
+                    etudiant = Etudiant.objects.get(matricule=matricule, nom=nom)
+                    request.session['etudiant_id'] = etudiant.id
+                    return redirect('vote_page')
+                except Etudiant.DoesNotExist:
+                    messages.error(request, "Identifiants incorrects")
+            else:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    if user.is_staff:
+                        return redirect('admin_panel')
+                    else:
+                        return redirect('vote_page')
+                else:
+                    messages.error(request, "Identifiants incorrects")
     else:
         form = LoginForm()
     return render(request, 'vote/login.html', {'form': form})

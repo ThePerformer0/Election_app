@@ -1,0 +1,84 @@
+{% extends "vote/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Connexion</h2>
+    <form method="post" action="{% url 'login_view' %}">
+      {% csrf_token %}
+      <div class="mb-4">
+        <input type="checkbox" id="is_student" name="is_student" class="mr-2">
+        <label for="is_student" class="text-gray-700">Je suis un étudiant</label>
+      </div>
+      <div id="student_fields" class="hidden">
+        <div class="mb-4">
+          <label for="matricule" class="block text-gray-700">Matricule</label>
+          <input
+            type="text"
+            id="matricule"
+            name="matricule"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="nom" class="block text-gray-700">Nom</label>
+          <input
+            type="text"
+            id="nom"
+            name="nom"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+      </div>
+      <div id="admin_fields">
+        <div class="mb-4">
+          <label for="username" class="block text-gray-700">Nom d'utilisateur</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-gray-700">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Se connecter
+        </button>
+        <a
+          href="#"
+          class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+        >Mot de passe oublié ?</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('is_student').addEventListener('change', function() {
+    var studentFields = document.getElementById('student_fields');
+    var adminFields = document.getElementById('admin_fields');
+    if (this.checked) {
+      studentFields.classList.remove('hidden');
+      adminFields.classList.add('hidden');
+    } else {
+      studentFields.classList.add('hidden');
+      adminFields.classList.remove('hidden');
+    }
+  });
+</script>
+{% endblock %}
