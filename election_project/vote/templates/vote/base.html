@@ -7,6 +7,18 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'vote_page' %}" class="text-xl font-bold">Election App</a>
+            <div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'logout_view' %}" class="ml-4">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'login_view' %}" class="ml-4">Connexion</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
     {% block content %}{% endblock %}
 </body>
 </html>

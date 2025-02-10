@@ -1,0 +1,26 @@
+{% extends "vote/base.html" %}
+
+{% block title %}Statut du Vote{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">Statut du Vote</h2>
+        {% if vote %}
+            <p class="text-gray-700 mb-4">Vous avez voté pour :</p>
+            <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                {% if vote.candidat.photo %}
+                    <img src="{{ vote.candidat.photo.url }}" alt="Photo de {{ vote.candidat.etudiant.nom }}" class="w-full h-48 object-cover rounded-t-lg mb-4">
+                {% endif %}
+                <h3 class="text-xl font-bold">{{ vote.candidat.etudiant.nom }}</h3>
+                <p class="text-gray-700">{{ vote.candidat.slogan }}</p>
+            </div>
+        {% else %}
+            <p class="text-gray-700">Vous n'avez pas encore voté.</p>
+            <div class="mt-6 text-center">
+                <a href="{% url 'vote_page' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Retourner à la page de vote</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

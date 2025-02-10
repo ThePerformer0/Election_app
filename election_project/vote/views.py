@@ -16,7 +16,7 @@ def login_view(request):
                 nom = form.cleaned_data['nom']
                 try:
                     etudiant = Etudiant.objects.get(matricule=matricule, nom=nom)
-                    request.session['etudiant_id'] = etudiant.id
+                    request.session['etudiant_matricule'] = etudiant.matricule
                     return redirect('vote_page')
                 except Etudiant.DoesNotExist:
                     messages.error(request, "Identifiants incorrects")
@@ -38,11 +38,11 @@ def login_view(request):
 
 
 def vote_view(request):
-    etudiant_id = request.session.get("etudiant_id")
-    if not etudiant_id:
+    etudiant_matricule = request.session.get("etudiant_matricule")
+    if not etudiant_matricule:
         return redirect('login_view')
     
-    etudiant = get_object_or_404(Etudiant, id=etudiant_id)
+    etudiant = get_object_or_404(Etudiant, matricule=etudiant_matricule)
     
     # Vérification que l'étudiant n'a pas déjà voté
     if etudiant.a_vote:
@@ -53,9 +53,9 @@ def vote_view(request):
     candidats = Candidat.objects.filter(annee_candidature=etudiant.annee_scolaire)
     
     if request.method == "POST":
-        candidat_id = request.POST.get("candidat")
+        candidat_matricule = request.POST.get("candidat_matricule")
         try:
-            candidat = Candidat.objects.get(pk=candidat_id)
+            candidat = get_object_or_404(Candidat, etudiant__matricule=candidat_matricule)
             # Enregistrement du vote
             Vote.objects.create(etudiant=etudiant, candidat=candidat)
             etudiant.a_vote = True
@@ -69,10 +69,10 @@ def vote_view(request):
 
 
 def vote_status(request):
-    etudiant_id = request.session.get("etudiant_id")
-    if not etudiant_id:
+    etudiant_matricule = request.session.get("etudiant_matricule")
+    if not etudiant_matricule:
         return redirect('login_view')
-    etudiant = get_object_or_404(Etudiant, id=etudiant_id)
+    etudiant = get_object_or_404(Etudiant, matricule=etudiant_matricule)
     vote = Vote.objects.filter(etudiant=etudiant).first()
     return render(request, "vote/vote_status.html", {"vote": vote})
 
@@ -94,3 +94,9 @@ def admin_panel(request):
     }
     return render(request, "vote/admin_panel.html", context)
 
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "Vous avez été déconnecté avec succès.")
+    return redirect('login_view')
