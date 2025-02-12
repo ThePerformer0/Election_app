@@ -2,6 +2,10 @@
 
 Une application web pour gérer les élections étudiantes.
 
+## Description
+
+Election App est une plateforme de vote en ligne conçue pour un établissement scolaire pour les élections du président de l'association des étudiants. Seuls les délégués de classe participent aux votes, et ceux-ci sont ajoutés par un membre de l'administration de l'école pour participer au vote. C'est également cet administrateur qui ajoute des candidats aux élections.
+
 ## Technologies utilisées
 
 - **Backend** : Django
@@ -47,20 +51,20 @@ Une application web pour gérer les élections étudiantes.
     - Créez un dossier `media/candidats_photos/` dans le répertoire racine du projet.
     - Ajoutez les images des candidats dans ce dossier. Les images doivent être nommées de manière à correspondre aux candidats dans la base de données.
 
-
 6. Démarrez le serveur de développement :
 
     ```sh
     python manage.py runserver
     ```
 
-## Structure du projet
 
 ## Fonctionnalités
 
 - Gestion des utilisateurs (étudiants)
 - Création et gestion des élections
 - Système de vote sécurisé
+- Ajout des délégués de classe par l'administrateur
+- Ajout des candidats aux élections par l'administrateur
 
 ## Contribution
 
