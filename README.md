@@ -23,7 +23,6 @@ Election App est une plateforme de vote en ligne conçue pour un établissement 
 
     ```sh
     git clone https://github.com/ThePerformer0/Election_app.git
-    cd election_app
     cd election_project
     ```
 
