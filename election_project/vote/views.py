@@ -83,7 +83,6 @@ def admin_panel(request):
     total_etudiants = Etudiant.objects.count()
     total_votes = Vote.objects.count()
     
-    # Exemple : nombre d'étudiants de la filière "sécurité informatique" qui n'ont pas voté
     filiere_sic = Filiere.objects.filter(nom__icontains="sécurité informatique").first()
     non_votants = Etudiant.objects.filter(filiere=filiere_sic, a_vote=False).count() if filiere_sic else 0
     
@@ -108,13 +107,17 @@ def admin_panel(request):
         elif 'add_candidat' in request.POST:
             candidat_form = CandidatForm(request.POST, request.FILES)
             if candidat_form.is_valid():
-                Candidat.objects.create(
-                    etudiant=candidat_form.cleaned_data['etudiant'],
-                    slogan=candidat_form.cleaned_data['slogan'],
-                    annee_candidature=candidat_form.cleaned_data['annee_candidature'],
-                    photo=candidat_form.cleaned_data['photo']
-                )
-                messages.success(request, "Candidat ajouté avec succès.")
+                etudiant = candidat_form.cleaned_data['etudiant']
+                if Candidat.objects.filter(etudiant=etudiant).exists():
+                    messages.error(request, "Cet étudiant est déjà candidat.")
+                else:
+                    Candidat.objects.create(
+                        etudiant=etudiant,
+                        slogan=candidat_form.cleaned_data['slogan'],
+                        annee_candidature=candidat_form.cleaned_data['annee_candidature'],
+                        photo=candidat_form.cleaned_data['photo']
+                    )
+                    messages.success(request, "Candidat ajouté avec succès.")
                 return redirect('admin_panel')
         elif 'delete_candidat' in request.POST:
             candidat_matricule = request.POST.get("candidat_matricule")
@@ -127,7 +130,13 @@ def admin_panel(request):
     candidats = Candidat.objects.all()
     votes_par_candidat = {candidat: Vote.objects.filter(candidat=candidat).count() for candidat in candidats}
     specialites = Specialite.objects.all()
-    votes_par_specialite = {specialite: Etudiant.objects.filter(filiere__specialite=specialite, a_vote=True).count() for specialite in specialites}
+    votes_par_specialite = {
+        specialite: {
+            'total': Etudiant.objects.filter(filiere__specialite=specialite).count(),
+            'votants': Etudiant.objects.filter(filiere__specialite=specialite, a_vote=True).count()
+        }
+        for specialite in specialites
+    }
     
     context = {
         "total_etudiants": total_etudiants,
@@ -139,7 +148,6 @@ def admin_panel(request):
         "votes_par_specialite": votes_par_specialite,
     }
     return render(request, "vote/admin_panel.html", context)
-
 
 from django.contrib.auth import logout
 

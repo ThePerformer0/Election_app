@@ -12,31 +12,36 @@
             <button class="tab-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="showTab('vote', this)">Votes</button>
         </div>
         <div id="candidat" class="tab-content">
-            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" onclick="toggleForm('add-candidat-form')">Ajouter un Candidat</button>
-            <div id="add-candidat-form" class="hidden mt-4">
-                <h3 class="text-3xl text-center font-bold mb-4">Ajouter un Candidat</h3>
-                <form method="post" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md w-full max-w-md mx-auto">
-                    {% csrf_token %}
-                    <div class="grid grid-cols-1 gap-4">
-                        <div>
-                            <label for="id_etudiant" class="block text-gray-700">Étudiant</label>
-                            {{ candidat_form.etudiant|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4" onclick="openModal('add-candidat-modal')">Ajouter un Candidat</button>
+            <div id="add-candidat-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                <div class="bg-white p-8 rounded shadow-md w-full max-w-md mx-auto">
+                    <h3 class="text-3xl text-center font-bold mb-4">Ajouter un Candidat</h3>
+                    <form method="post" enctype="multipart/form-data" onsubmit="closeModal('add-candidat-modal')">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label for="id_etudiant" class="block text-gray-700">Étudiant</label>
+                                {{ candidat_form.etudiant|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+                            </div>
+                            <div>
+                                <label for="id_slogan" class="block text-gray-700">Slogan</label>
+                                {{ candidat_form.slogan|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+                            </div>
+                            <div>
+                                <label for="id_annee_candidature" class="block text-gray-700">Année de Candidature</label>
+                                {{ candidat_form.annee_candidature|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+                            </div>
+                            <div>
+                                <label for="id_photo" class="block text-gray-700">Photo</label>
+                                {{ candidat_form.photo|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+                            </div>
                         </div>
-                        <div>
-                            <label for="id_slogan" class="block text-gray-700">Slogan</label>
-                            {{ candidat_form.slogan|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
+                        <div class="flex justify-end mt-4">
+                            <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" onclick="closeModal('add-candidat-modal')">Annuler</button>
+                            <button type="submit" name="add_candidat" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Ajouter</button>
                         </div>
-                        <div>
-                            <label for="id_annee_candidature" class="block text-gray-700">Année de Candidature</label>
-                            {{ candidat_form.annee_candidature|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
-                        </div>
-                        <div>
-                            <label for="id_photo" class="block text-gray-700">Photo</label>
-                            {{ candidat_form.photo|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300" }}
-                        </div>
-                    </div>
-                    <button type="submit" name="add_candidat" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Ajouter</button>
-                </form>
+                    </form>
+                </div>
             </div>
             <h3 class="text-3xl font-bold mt-8 mb-4">Liste des Candidats</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -88,14 +93,22 @@
         </div>
         <div id="vote" class="tab-content hidden">
             <h3 class="text-3xl font-bold mb-4">Statistiques de Vote</h3>
-            <ul class="list-disc pl-5">
-                <li>Total des étudiants : {{ total_etudiants }}</li>
-                <li>Total des votes : {{ total_votes }}</li>
-                <li>Étudiants de la filière "sécurité informatique" n'ayant pas voté : {{ non_votants }}</li>
-                {% for specialite, votes in votes_par_specialite.items %}
-                <li>{{ specialite.nom }} - {{ votes }} votes</li>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">Total des étudiants</h4>
+                    <p class="text-gray-700">{{ total_etudiants }}</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">Total des votes</h4>
+                    <p class="text-gray-700">{{ total_votes }}</p>
+                </div>
+                {% for specialite, stats in votes_par_specialite.items %}
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">{{ specialite.nom }}</h4>
+                    <p class="text-gray-700">{{ stats.votants }} votants sur {{ stats.total }} étudiants</p>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -126,6 +139,14 @@
         } else {
             form.classList.add('hidden');
         }
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
     }
 </script>
 {% endblock %}
