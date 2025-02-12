@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
 from .models import *
-from .forms import LoginForm
+from .forms import *
 
 from django.contrib.auth import authenticate, login
 
@@ -87,12 +87,59 @@ def admin_panel(request):
     filiere_sic = Filiere.objects.filter(nom__icontains="sécurité informatique").first()
     non_votants = Etudiant.objects.filter(filiere=filiere_sic, a_vote=False).count() if filiere_sic else 0
     
+    # Initialisation des formulaires
+    etudiant_form = EtudiantForm()
+    candidat_form = CandidatForm()
+    
+    # Formulaires pour ajouter des étudiants et des candidats
+    if request.method == 'POST':
+        if 'add_etudiant' in request.POST:
+            etudiant_form = EtudiantForm(request.POST)
+            if etudiant_form.is_valid():
+                Etudiant.objects.create(
+                    matricule=etudiant_form.cleaned_data['matricule'],
+                    nom=etudiant_form.cleaned_data['nom'],
+                    filiere=etudiant_form.cleaned_data['filiere'],
+                    niveau=etudiant_form.cleaned_data['niveau'],
+                    annee_scolaire=etudiant_form.cleaned_data['annee_scolaire']
+                )
+                messages.success(request, "Étudiant ajouté avec succès.")
+                return redirect('admin_panel')
+        elif 'add_candidat' in request.POST:
+            candidat_form = CandidatForm(request.POST, request.FILES)
+            if candidat_form.is_valid():
+                Candidat.objects.create(
+                    etudiant=candidat_form.cleaned_data['etudiant'],
+                    slogan=candidat_form.cleaned_data['slogan'],
+                    annee_candidature=candidat_form.cleaned_data['annee_candidature'],
+                    photo=candidat_form.cleaned_data['photo']
+                )
+                messages.success(request, "Candidat ajouté avec succès.")
+                return redirect('admin_panel')
+        elif 'delete_candidat' in request.POST:
+            candidat_matricule = request.POST.get("candidat_matricule")
+            candidat = get_object_or_404(Candidat, etudiant__matricule=candidat_matricule)
+            candidat.delete()
+            messages.success(request, "Candidat supprimé avec succès.")
+            return redirect('admin_panel')
+    
+    # Statistiques de vote
+    candidats = Candidat.objects.all()
+    votes_par_candidat = {candidat: Vote.objects.filter(candidat=candidat).count() for candidat in candidats}
+    specialites = Specialite.objects.all()
+    votes_par_specialite = {specialite: Etudiant.objects.filter(filiere__specialite=specialite, a_vote=True).count() for specialite in specialites}
+    
     context = {
         "total_etudiants": total_etudiants,
         "total_votes": total_votes,
         "non_votants": non_votants,
+        "etudiant_form": etudiant_form,
+        "candidat_form": candidat_form,
+        "votes_par_candidat": votes_par_candidat,
+        "votes_par_specialite": votes_par_specialite,
     }
     return render(request, "vote/admin_panel.html", context)
+
 
 from django.contrib.auth import logout
 

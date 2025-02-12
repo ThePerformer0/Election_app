@@ -20,6 +20,9 @@ class Filiere(models.Model):
 
 class AnneeScolaire(models.Model):
     annee_scolaire = models.CharField(max_length=9)  # e.g., "2023-2024"
+    
+    def __str__(self):
+        return f"{self.annee_scolaire}"
 
 
 class Etudiant(models.Model):
