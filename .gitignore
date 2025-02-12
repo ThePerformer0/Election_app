@@ -13,4 +13,4 @@ __pycache__/
 *.po
 
 # Fichiers images
-/media/
+media/candidats_photos/
